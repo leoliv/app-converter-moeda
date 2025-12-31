@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   bntArea: {
     width: "90%",
-    backgroundColor: "#ff2819ff",
+    backgroundColor: "#00742cff",
     padding: 10,
     alignItems: "center",
     borderBottomLeftRadius: 8,
