@@ -11,6 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { PickerItem } from "./src/components/PickerItem";
 import { api } from "./src/services/api";
 import { useEffect, useState } from "react";
+import { ConverterCoin } from "./src/utils/ConverterCoin";
 
 type Moeda = {
   key: string;
@@ -22,6 +23,9 @@ export default function App() {
   const [moedas, setMoedas] = useState<Moeda[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [moedaSelecionada, setMoedaSelecionada] = useState<string>("");
+  const [valorMoeda, setValorMoeda] = useState<number>(0);
+  const [valorConvertido, setValorConvertido] = useState<string | number>(0);
+  const [valorDigitado, setValorDigitado] = useState<string>("");
   useEffect(() => {
     const loadMoedas = async () => {
       const response = await api.get("latest");
@@ -80,11 +84,42 @@ export default function App() {
               placeholder="EX: 1.50"
               style={styles.input}
               keyboardType="numeric"
+              value={valorDigitado}
+              onChangeText={(text) => setValorDigitado(text)}
             />
           </View>
-          <TouchableOpacity style={styles.bntArea}>
+          <TouchableOpacity
+            style={styles.bntArea}
+            onPress={() =>
+              ConverterCoin(
+                Number(valorDigitado),
+                moedaSelecionada,
+                setValorMoeda,
+                setValorConvertido
+              )
+            }
+          >
             <Text style={styles.bntText}>Converter</Text>
           </TouchableOpacity>
+
+          {valorConvertido !== 0 && (
+            <View style={styles.areaResultado}>
+              <Text style={styles.valorConvertido}>
+                {valorMoeda} {moedaSelecionada}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: "#202327ff",
+                  fontWeight: "500",
+                  padding: 10,
+                }}
+              >
+                Corresponde a
+              </Text>
+              <Text style={styles.valorConvertido}>{valorConvertido}</Text>
+            </View>
+          )}
         </View>
       </SafeAreaView>
     );
@@ -134,5 +169,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "#f9f9f9",
     fontWeight: "bold",
+  },
+  areaResultado: {
+    marginTop: 40,
+    alignItems: "center",
+    width: "90%",
+    padding: 20,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+  },
+  valorConvertido: {
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#101215",
   },
 });
