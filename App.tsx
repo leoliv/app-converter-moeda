@@ -1,15 +1,22 @@
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PickerItem } from "./src/components/PickerItem";
 import { api } from "./src/services/api";
 import { useEffect, useState } from "react";
 
-interface Moeda {
+type Moeda = {
   key: string;
   label: string;
   value: string;
-}
+};
 
 export default function App() {
   const [moedas, setMoedas] = useState<Moeda[]>([]);
@@ -62,10 +69,22 @@ export default function App() {
               moedaSelecionada={moedaSelecionada}
               onChange={(moeda: string) => {
                 setMoedaSelecionada(moeda);
-                console.log(moeda);
               }}
             />
           </View>
+          <View style={styles.areaValor}>
+            <Text style={styles.titulo}>
+              Digite um valor para converter em (R$)
+            </Text>
+            <TextInput
+              placeholder="EX: 1.50"
+              style={styles.input}
+              keyboardType="numeric"
+            />
+          </View>
+          <TouchableOpacity style={styles.bntArea}>
+            <Text style={styles.bntText}>Converter</Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     );
@@ -89,5 +108,31 @@ const styles = StyleSheet.create({
   tituloMoeda: {
     fontWeight: "bold",
     color: "#101215",
+  },
+  areaValor: {
+    width: "90%",
+    padding: 10,
+    backgroundColor: "#f9f9f9",
+    borderTopWidth: 1,
+  },
+  titulo: {
+    fontWeight: "bold",
+  },
+  input: {
+    fontSize: 18,
+    color: "#000",
+  },
+  bntArea: {
+    width: "90%",
+    backgroundColor: "#ff2819ff",
+    padding: 10,
+    alignItems: "center",
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+  },
+  bntText: {
+    fontSize: 20,
+    color: "#f9f9f9",
+    fontWeight: "bold",
   },
 });
